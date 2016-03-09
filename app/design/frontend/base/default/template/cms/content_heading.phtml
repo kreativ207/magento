@@ -1,0 +1,143 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<style>
+.my-border{
+    box-shadow: 0 0 5px #BDB8B8;
+}
+.my-padding{
+    padding-left: 10px;
+}
+.my-row{
+    min-height: 28px;
+    background-color: #333333;
+    color: #fff;
+    padding: 6px 15px;
+    /*font-size: 18px;*/
+    /*font-weight: 600;*/
+    /*letter-spacing: -0.7px;*/
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-size: 20px;
+}
+.my-product-name{
+    padding: 6px 15px !important;
+}
+@media (max-width: 767px){
+    .my-respond{
+        width: 644px !important;
+    }
+}
+</style>
+<?php if($_SERVER['REQUEST_URI'] == "/"): ?>
+<?php
+
+/**
+ * Поучение ресурсной модели
+ */
+$resource = Mage::getSingleton('core/resource');
+
+/**
+ * Установка соединения для чтения
+ */
+$readConnection = $resource->getConnection('core_read');
+
+$query = 'SELECT * FROM ds_news_entities ORDER BY `position` ASC';
+
+/**
+ * Выполнение запроса и сохранение результата в $results
+ */
+$results = $readConnection->fetchAll($query);
+
+/**
+ * Вывод результатов
+ */
+//var_dump($results);
+$index = 1;
+$maxItems = 4;
+$itemCounter = 1;
+$row_d = 1;
+?>
+
+<?php foreach($results as $news): ?>
+    <?php if (1 === $row_d) : ?>
+        <div class="my-row">Unsere TOP Produktlinien - Jetzt reinschauen und das richtige f&uuml;r Ihr B&uuml;ro finden!</div>
+        <br>
+    <?php endif ?>
+    <?php if (5 === $row_d) : ?>
+        <div class="my-row">Unsere Produkte auf einen Blick</div>
+        <br>
+    <?php endif ?>
+    <?php if (1 === $index) : ?>
+        <div class="row-fluid">
+    <?php endif ?>
+
+    <div class="span3 fx-clickable my-border">
+        <a class="fx-clickable-link" href="<?=$news['created']?>"><img src="http://topbueromoebel.com/media/ds_news/<?=$news['news_id'] ?>.jpg" alt="<?=$news['title'] ?> " style="width: 256px" class="my-respond"/></a>
+
+        <h2 class="product-name my-product-name">
+            <a class="fx-clickable-link" href="<?=$news['created']?>"><?=$news['title'] ?></a>
+        </h2>
+        <p class="my-padding">
+
+
+            <?php echo $news['content']; ?>
+            <!--echo $_helper->categoryAttribute($_category, $_categoryShortdescription, 'category_shortdescription');-->
+
+        </p>
+    </div>
+    <?php if ($maxItems === $index) : ?>
+        </div>
+        <?php $index = 0 ?>
+    <?php endif ?>
+    <?php
+    $index++;
+    $itemCounter++;
+    $row_d++;
+    ?>
+<?php endforeach; ?>
+<div style="clear: both"></div>
+<?php else: ?>
+<?php if($_heading = $this->getContentHeading()): ?>
+    <div class="page-title">
+        <h1><?php echo $_heading; ?></h1>
+    </div>
+<?php endif; ?>
+<?php endif; ?>
+<script type="text/javascript">
+    //<![CDATA[
+    (function ($, undefined) {
+        $('.fx-clickable').each(function () {
+            var self = $(this);
+
+            self.click(function () {
+                var href = self.find('a.fx-clickable-link').attr('href');
+                window.location.href = href;
+                return false;
+            });
+        });
+    })(jQuery, jQuery);
+    //]]>
+</script>
